@@ -1,7 +1,5 @@
 version: 2.1
 
-commands:
-
 jobs:
   build-frontend:
     docker:
