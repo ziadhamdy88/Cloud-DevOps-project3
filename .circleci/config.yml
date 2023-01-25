@@ -22,20 +22,20 @@ jobs:
   build-backend:
     docker:
       image: circleci/node:13.8.0
-      steps:
-        - checkout
-        - restore_cache:
-            keys: [backend-build]
-        - run:
-            name: Build back-end
-            command: |
-              cd backend
-              npm install
-              npm run build
-              exit 1
-        - save_cache:
-            paths: [backend/node_modules]
-            key: backend-build
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: Build back-end
+          command: |
+            cd backend
+            npm install
+            npm run build
+            exit 1
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
 
 workflows:
   default:
