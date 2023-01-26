@@ -1,5 +1,22 @@
 version: 2.1
 
+commands:
+  destroy-environment:
+    description: Destroys back-end and front-end cloudformation stacks given workflow id
+    parameters:
+      work-flow-id:
+        type: string
+        default: ${CIRCLECI_WORKFLOW_ID:0:7}
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack \
+            --stack-name "udapeople-backend-<< parameters.work-flow-id >>"
+            aws cloudformation delete-stack \
+            --stack-name "udapeople-frontend-<< parameters.work-flow-id >>"
+
 jobs:
   build-frontend:
     docker:
@@ -107,6 +124,41 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-scan
+  
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install tar and gzip
+          command: yum install -y tar gzip ####
+      - run:
+          name: Ensure backend infrastructure exists
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      - run:
+          name: Ensure frontend infrastructure exists
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/frontend.yml \
+            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      - run:
+          name: Fetch EC2 instance IP and append to ansible inventory
+          command: | #####
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text >> ~/Cloud\ DevOps\ Project3/circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - /Cloud\ DevOps\ Project3/circleci/ansible/inventory.txt
 
 workflows:
   default:
@@ -121,3 +173,8 @@ workflows:
           requires: [build-frontend]
       - scan-backend:
           requires: [build-backend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [test-feature-branch]
