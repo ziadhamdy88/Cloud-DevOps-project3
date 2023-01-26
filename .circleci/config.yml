@@ -154,11 +154,14 @@ jobs:
           command: | ###
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text >> ~/inventory.txt
+            --output text >> AWS\ DevOps/Cloud-DevOps-Project3/.circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - inventory.txt
+            - AWS\ DevOps/Cloud-DevOps-Project3/.circleci/ansible/inventory.txt
+    
+  configure-infrastructure:
+
 
 workflows:
   default:
