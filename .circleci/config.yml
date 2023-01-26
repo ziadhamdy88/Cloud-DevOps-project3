@@ -151,7 +151,7 @@ jobs:
             --tags project=udapeople
       - run:
           name: Fetch EC2 instance IP and append to ansible inventory
-          command: | ####
+          command: | ###
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> ~/inventory.txt
