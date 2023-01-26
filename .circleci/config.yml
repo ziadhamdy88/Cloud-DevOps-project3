@@ -158,7 +158,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - /inventory.txt
+            - inventory.txt
 
 workflows:
   default:
