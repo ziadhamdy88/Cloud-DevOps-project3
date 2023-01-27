@@ -221,30 +221,43 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              echo "Successful execution"
               curl https://kvdb.io/8jYAEi5KBQ9Hf3gUi7Q7ek/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi      
       - revert-migrations
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: cimg/base:stable
     steps:
       - checkout
       - attach_workspace:
           at: ~/project/
       - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
+      - run:
+          name: Install Ansible
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common -y
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible -y
+      - run:
           name: Install python
           command: apt -y update && apt install python3
       - run:
-          name: Install ansible
-          command: apk add --update ansible
-      - run:
           name: Install tar and gzip
           command: yum install -y tar gzip
-      - run:
-          name: Install npm and node
-          command: apt install nodejs npm
       - run:
           name: Get backend URL
           command: |
