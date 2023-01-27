@@ -122,7 +122,6 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit fix --force
-            npm audit --audit-level=critical
           # audit fix twice
       - save_cache:
           paths: [frontend/node_modules]
@@ -230,6 +229,7 @@ jobs:
             fi
           # to return the value stored
           # curl --insecure https://kvdb.io/8jYAEi5KBQ9Hf3gUi7Q7ek/migration_${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
 
   deploy-frontend:
     docker:

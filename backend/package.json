@@ -32,6 +32,8 @@
     "update:domain": "npm update @kiwihr/kiwi-domain"
   },
   "dependencies": {
+    "ajv": "^6.12.3",
+    "qs": "^6.5.3",
     "@hapi/joi": "^17.1.1",
     "@nestjs/common": "^6.11.11",
     "@nestjs/core": "^6.11.11",
