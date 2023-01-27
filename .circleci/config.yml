@@ -214,6 +214,7 @@ jobs:
           command: |
             cd backend
             npm install
+            npm install rxjs
             # audit fix for vulnerabilities
             npm audit fix --force
             npm audit fix --force
