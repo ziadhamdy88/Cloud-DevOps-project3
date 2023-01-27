@@ -254,7 +254,9 @@ jobs:
             sudo apt install ansible -y
       - run:
           name: Install python
-          command: apt -y update && apt install python3
+          command: |
+            sudo apt -y update
+            sudo apt install python3
       - run:
           name: Install tar and gzip
           command: yum install -y tar gzip
