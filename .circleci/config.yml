@@ -218,6 +218,7 @@ jobs:
             npm install
             npm audit fix --force # audit fix for vulnerabilities
             npm run migrations > migrations_dump.txt
+            npm audit fix --force
       - run:
           name: Send migration results to kvdb bucket
           command: |
@@ -265,6 +266,34 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - revert-migrations
       
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
+      - attach_workspace:
+          at: ~/project/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add tar
+            apk add gzip
+            apk add --update ansible
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      # Here's where you will add some code to rollback on failure  
 
 
 workflows:
