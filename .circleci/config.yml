@@ -78,7 +78,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-test]
+          keys: [frontend-build]
       - run:
           name: Test front-end
           command: |
@@ -87,7 +87,7 @@ jobs:
             npm run test
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-test
+          key: frontend-build
   
   test-backend:
     docker:
@@ -95,7 +95,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-test]
+          keys: [backend-build]
       - run:
           name: Test back-end
           command: |
@@ -104,7 +104,7 @@ jobs:
             npm run test
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-test
+          key: backend-build
 
   scan-frontend:
     docker:
@@ -112,7 +112,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-scan]
+          keys: [frontend-build]
       - run:
           name: Scan front-end
           command: |
@@ -124,7 +124,7 @@ jobs:
           # audit fix twice
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-scan
+          key: frontend-build
 
   scan-backend:
     docker:
@@ -132,7 +132,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-scan]
+          keys: [backend-build]
       - run:
           name: Scan back-end
           command: |
@@ -143,7 +143,7 @@ jobs:
             npm audit --audit-level=critical
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-scan
+          key: backend-build
   
   deploy-infrastructure:
     docker:
@@ -179,7 +179,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - ~/project/.circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
       - run:
           name: Testing inventory
           command: cat ~/project/.circle/ansible/inventory.txt
