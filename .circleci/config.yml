@@ -29,7 +29,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS =c url --insecure https://kvdb.io/8jYAEi5KBQ9Hf3gUi7Q7ek/migration_<< parameters.workflow-id >>
+            SUCCESS = curl --insecure https://kvdb.io/8jYAEi5KBQ9Hf3gUi7Q7ek/migration_<< parameters.workflow-id >>
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -122,6 +122,7 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit fix --force
+            npm audit --audit-level=critical
           # audit fix twice
       - save_cache:
           paths: [frontend/node_modules]
@@ -217,8 +218,8 @@ jobs:
             npm install
             # audit fix for vulnerabilities
             npm audit fix --audit-level=critical --force
+            npm audit fix 
             npm audit fix --force
-            npm audit --audit-level=critical
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to kvdb bucket
