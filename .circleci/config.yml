@@ -192,7 +192,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
       - attach_workspace:
-          at: ~/project/
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -202,11 +202,11 @@ jobs:
             apk add --update ansible
       - run:
           name: Testing inventory file
-          command: cat .circleci/ansible/inventory.txt
+          command: cat project/.circleci/ansible/inventory.txt
       - run:
           name: Run ansible playbook and configure server
           command: |
-            cd .circleci/ansible
+            cd project/.circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
 
   run-migrations:
