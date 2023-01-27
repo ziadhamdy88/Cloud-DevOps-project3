@@ -179,7 +179,10 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - /project/.circleci/ansible/inventory.txt
+      - run:
+          name: Testing inventory
+          command: cat ~/project/.circle/ansible/inventory.txt
     
   configure-infrastructure:
     docker:
