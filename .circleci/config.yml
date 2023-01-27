@@ -182,7 +182,7 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - run:
           name: Testing inventory
-          command: cat inventory.txt
+          command: cat project/.circleci/ansible/inventory.txt
     
   configure-infrastructure:
     docker:
