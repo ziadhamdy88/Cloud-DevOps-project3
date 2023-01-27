@@ -172,7 +172,7 @@ jobs:
       - run:
           name: Fetch EC2 instance IP and append to ansible inventory
           command: |
-            echo aws ec2 describe-instances \
+            aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text >> inventory.txt
