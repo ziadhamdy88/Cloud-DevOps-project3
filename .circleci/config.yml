@@ -210,7 +210,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-scan] #backend-build
+          keys: [backend-build, backend-scan] #backend-build
       - run:
           name: Run migrations
           command: |
@@ -218,6 +218,7 @@ jobs:
             npm install
             # audit fix for vulnerabilities
             npm audit fix --audit-level=critical --force
+            npm audit fix --force
             npm audit fix --force
             npm run migrations > migrations_dump.txt
       - run:
