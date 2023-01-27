@@ -208,13 +208,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build, backend-scan] #backend-build
+          keys: [backend-build] #backend-build
       - run:
           name: Run migrations
           command: |
             cd backend
             npm install
-            npm install rxjs
             # audit fix for vulnerabilities
             npm audit fix --force
             npm audit fix --force
