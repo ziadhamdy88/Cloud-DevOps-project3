@@ -9,6 +9,7 @@
   become: yes
   shell: |
     npm install
+    ls
     tar -xf artifact.tar.gz
     pm2 stop default
     pm2 start npm -- start
