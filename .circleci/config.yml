@@ -233,11 +233,11 @@ jobs:
           command: |
             if grep -q "has been executed successfully." backend/migrations_dump.txt
             then
-                curl https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+                curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
             if grep -q "No migrations are pending" backend/migrations_dump.txt
             then
-              curl https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d "No migrations pending"
+              curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d "No migrations pending"
             fi
       - revert-migrations
 
@@ -273,9 +273,6 @@ jobs:
           command: |
             sudo apt -y update
             sudo apt install python3
-      #- run:
-      #    name: Install tar and gzip
-      #    command: yum install -y tar gzip
       - run:
           name: Get backend URL
           command: |
