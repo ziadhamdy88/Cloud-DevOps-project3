@@ -1,11 +1,14 @@
 ---
 - name: Install dependencies
+  become: yes
   npm:
     path: /backend
     state: latest
 
 - name: Extract zipped artifact into the EC2 and start the app
-  raw: |
+  become: yes
+  shell: |
     npm install
+    tar xzf artifact.tar.gz
     pm2 stop default
     pm2 start npm -- start
