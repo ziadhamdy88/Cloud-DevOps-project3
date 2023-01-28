@@ -248,11 +248,10 @@ jobs:
           command: |
             if grep -q "has been executed successfully." backend/migrations_dump.txt
             then
-                curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
-            fi
-            if grep -q "No migrations are pending" backend/migrations_dump.txt
-            then
-              curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d "No migrations pending"
+              echo "Migrations dumped successfully"
+              curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+            else
+              echo "Unsuccessful"
             fi
       - revert-migrations
 
@@ -387,6 +386,9 @@ jobs:
       - run:
           name: Get backend url
           command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
       - run:
@@ -394,9 +396,9 @@ jobs:
           command: |
             if curl "${API_URL}/api/status" | grep "ok"
             then
-              return 0
+              exit 0
             else
-              return 1
+              exit 1
             fi
       - run:
           name: Frontend smoke test.
@@ -405,9 +407,9 @@ jobs:
             echo ${URL}
             if curl -s ${URL} | grep "Welcome"
             then
-              return 1
+              exit 1
             else
-              return 1
+              exit 1
             fi
       - revert-migrations
       - destroy-environment
