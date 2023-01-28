@@ -201,12 +201,19 @@ jobs:
             unzip awscliv2.zip
             sudo ./aws/install
       - run:
-          name: Install dependencies
+          name: Install npm and node js
           command: |
-            apk add tar
-            apk add gzip
-            #yum install -y tar gzip
-            apk add --update ansible
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
+      - run:
+          name: Install Ansible
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common -y
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible -y
       - run:
           name: Testing inventory file
           command: cat .circleci/ansible/inventory.txt
