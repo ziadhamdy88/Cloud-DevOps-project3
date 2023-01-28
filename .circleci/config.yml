@@ -224,7 +224,7 @@ jobs:
             cd backend
             npm install
             #npm audit fix --force
-            npm run migrations >> backend/migrations_dump.txt
+            npm run migrations >> ~/project/backend/migrations_dump.txt
       - run:
           name: Test migrations_dump content
           command: cat ~/project/backend/migrations_dump.txt
