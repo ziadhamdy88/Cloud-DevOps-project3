@@ -195,6 +195,12 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
           name: Install dependencies
           command: |
             apk add tar
@@ -301,7 +307,7 @@ jobs:
       
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/base:stable
     steps:
       - checkout
       - add_ssh_keys:
@@ -309,14 +315,27 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run:
-          name: Install dependencies
+          name: Install AWS CLI
           command: |
-            apk add --update nodjs npm
-            apk add tar
-            apk add gzip
-            apk add --update ansible
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
-          name: Extract dependencies
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
+      - run:
+          name: Install Ansible
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common -y
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible -y
+      - run:
+          name: Extract artifact
           command: |
             cd backend
             npm i
