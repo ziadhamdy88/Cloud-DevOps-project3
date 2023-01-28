@@ -3,13 +3,21 @@
   become: yes
   npm:
     path: /backend
-    state: latest
+    state: directory
 
-- name: Extract zipped artifact into the EC2 and start the app
-  become: yes
+- name: Extract zipped artifact into the EC2
+  unarchive:
+    src: ~/.circleci/project/artifact.tar.gz
+    dest: "~/backend"
+
+- name: Install dependencies
   shell: |
+    cd ~/backend
     npm install
-    ls
-    tar -xf artifact.tar.gz
+
+- name: Start the app
+  shell: |
+    cd ~/backend_app/dist
     pm2 stop default
-    pm2 start npm -- start
+    pm2 start main.js
+  register: execute_node
