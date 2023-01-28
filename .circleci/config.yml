@@ -183,6 +183,7 @@ jobs:
       - run:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
+      - destroy-environment
     
   configure-infrastructure:
     docker:
@@ -208,6 +209,7 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
 
   run-migrations:
     docker:
@@ -309,20 +311,31 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update nodjs npm
             apk add tar
             apk add gzip
             apk add --update ansible
       - run:
-          name: Deploy backend
+          name: Extract dependencies
           command: |
             cd backend
             npm i
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
+      - run:
+          name: Printing inventory file content
+          command: |
             cd .circleci/ansible
             echo "Contents of the inventory.txt file is -------"
             cat inventory.txt
+      - run:
+          name: Deploy backend
+          command: |
+            export TYPEORM_MIGRATIONS_DIR=./migrations
+            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+            export TYPEORM_MIGRATIONS=./migrations/*.ts
+            cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
       - revert-migrations
