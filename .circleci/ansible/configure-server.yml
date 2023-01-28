@@ -25,7 +25,7 @@
     
     - name: "Upgrade packages"
       become: true
-      yum:
+      apt:
         name: "*"
         state: latest
     
