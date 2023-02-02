@@ -6,6 +6,7 @@
     state: directory
 
 - name: Extract zipped artifact into the EC2
+  become: yes
   unarchive:
     src: ~/project/.circleci/artifact.tar.gz
     dest: "~/backend_app"
