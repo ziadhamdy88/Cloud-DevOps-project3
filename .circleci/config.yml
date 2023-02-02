@@ -29,7 +29,8 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            echo $SUCCESS
             if(($SUCCESS == Not Found));
             then
               echo "Migration failed"
@@ -255,7 +256,7 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix --force
+            npm audit fix
             npm audit fix
             npm run migrations >> ~/project/backend/migrations_dump.txt
       - run:
@@ -267,7 +268,7 @@ jobs:
             if grep -q "has been executed successfully." backend/migrations_dump.txt
             then
               echo "Migrations dumped successfully"
-              curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             else
               echo "Unsuccessful"
             fi
