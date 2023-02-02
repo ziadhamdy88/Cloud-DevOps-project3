@@ -1,8 +1,8 @@
 ---
 - name: Create directory
   become: yes
-  npm:
-    path: /backend_app
+  file:
+    path: ~/backend_app
     state: directory
 
 - name: Extract zipped artifact into the EC2
