@@ -29,7 +29,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_$\{CIRCLE_WORKFLOW_ID:0:7\})
+            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if(($SUCCESS == Not Found))
             then
               echo "Migration failed"
@@ -294,7 +294,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
       - attach_workspace:
-          at: ~/project
+          at: ~/
       - run:
           name: Install AWS CLI
           command: |
@@ -317,7 +317,7 @@ jobs:
             sudo apt install ansible -y
       - run:
           name: Testing inventory file
-          command: cat .circleci/ansible/inventory.txt
+          command: cat /project/.circleci/ansible/inventory.txt
       - run:
           name: Run ansible playbook and configure server
           command: |
@@ -332,8 +332,8 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      - attach_workspace:
-          at: ~/project
+      #- attach_workspace:
+      #    at: ~/
       - run:
           name: Install AWS CLI
           command: |
@@ -352,7 +352,8 @@ jobs:
           command: |
             cd backend
             npm install
-            npm run migrations > ~/project/backend/migrations_dump.txt
+            #npm run migrations > ~/project/backend/migrations_dump.txt
+            npm run migrations > migrations_dump.txt
       - run:
           name: Test migrations_dump content
           command: cat ~/project/backend/migrations_dump.txt
@@ -362,7 +363,7 @@ jobs:
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               echo "Migrations dumped successfully"
-              curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
+              curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             else
               echo "Unsuccessful"
             fi
@@ -427,22 +428,14 @@ jobs:
   deploy-backend:
     docker:
       - image: cimg/base:stable
-        environment:
-          - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
-          - TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
-          - TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
-          - TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT')}}"
-          - TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
-          - TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
-          - TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
-          - TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
-          - TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
       - attach_workspace:
-          at: ~/project
+          at: ~/
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Install AWS CLI
           command: |
@@ -464,15 +457,21 @@ jobs:
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible -y
       - run:
+          name: Install dependencies
+          command: |
+            cd backend
+            npm install
+      - run:
           name: Zip directory to artifact
           command: |
             cd backend
-            sudo npm install
-            sudo npm install -g typescript
+            #sudo npm install -g typescript
             sudo npm run build
+            tar -czf artifact.tar.gz dist/* package*
             cd ..
-            sudo tar -C backend -czvf ~/project/artifact.tar.gz .
-
+            #sudo tar -C backend -czvf ~/project/artifact.tar.gz .
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            
             # Printing inventory file content
 
             echo "Contents of the inventory.txt file is -------"
