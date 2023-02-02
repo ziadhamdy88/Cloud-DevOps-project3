@@ -1,18 +1,18 @@
 ---
-- name: Install dependencies
+- name: Create directory
   become: yes
   npm:
-    path: /backend
+    path: /backend_app
     state: directory
 
 - name: Extract zipped artifact into the EC2
   unarchive:
-    src: ~/.circleci/project/artifact.tar.gz
-    dest: "~/backend"
+    src: ~/project/.circleci/artifact.tar.gz
+    dest: "~/backend_app"
 
 - name: Install dependencies
   shell: |
-    cd ~/backend
+    cd ~/backend_app
     npm install
 
 - name: Start the app

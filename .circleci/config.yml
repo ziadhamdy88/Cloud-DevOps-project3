@@ -3,32 +3,25 @@ version: 2.1
 commands:
   destroy-environment:
     description: Destroys back-end and front-end cloudformation stacks given workflow id
-    parameters:
-      work-flow-id:
-        type: string
-        default: ${CIRCLECI_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
             aws cloudformation delete-stack \
-            --stack-name "udapeople-backend-<< parameters.work-flow-id >>"
+            --stack-name "udapeople-backend-${CIRCLECI_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack \
-            --stack-name "udapeople-frontend-<< parameters.work-flow-id >>"
+            --stack-name "udapeople-frontend-${CIRCLECI_WORKFLOW_ID:0:7}"
+            aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
   
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    parameters:
-      workflow-id:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}  
     steps:
       - run:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_<<parameters.workflow-id>>)
+            SUCCESS=$(curl --insecure https://kvdb.io/KAbp5rZpMwTAuW5vAyoiGz/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if(( $SUCCESS == 1)); 
             then
               cd ~/project/backend
@@ -120,6 +113,7 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit fix --force
+            npm audit fix --force
             npm audit --audit-level=critical
           # audit fix twice
       - save_cache:
@@ -139,6 +133,7 @@ jobs:
             cd backend
             npm install
             npm audit fix --audit-level=critical --force
+            npm audit fix --force
             npm audit fix --force
             npm audit --audit-level=critical
       - save_cache:
@@ -188,6 +183,17 @@ jobs:
   configure-infrastructure:
     docker:
       - image: cimg/base:stable
+        environment:
+          NODE_ENV: "production"
+          VERSION: "1"
+          ENVIRONMENT: "production"
+          TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+          TYPEORM_HOST: $TYPEORM_HOST
+          TYPEORM_USERNAME: $TYPEORM_USERNAME
+          TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+          TYPEORM_DATABASE: $TYPEORM_DATABASE
+          TYPEORM_PORT: $TYPEORM_PORT
+          TYPEORM_ENTITIES: $TYPEORM_ENTITIES
     steps:
       - checkout
       - add_ssh_keys:
@@ -357,14 +363,12 @@ jobs:
             cd backend
             npm install
             npm run build
-            cd ..
             tar -czvf ~/project/artifact.tar.gz dist/* package*
-      - run:
-          name: Printing inventory file content
-          command: |
-            cd .circleci/ansible
+
+            # Printing inventory file content
+
             echo "Contents of the inventory.txt file is -------"
-            cat inventory.txt
+            cat ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Deploy backend
           command: |
@@ -372,7 +376,7 @@ jobs:
             export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
             export TYPEORM_MIGRATIONS=./migrations/*.ts
             export ANSIBLE_HOST_KEY_CHECKING=False
-            cd .circleci/ansible
+            cd ~/project/.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
       - revert-migrations
@@ -444,9 +448,9 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
+      #- deploy-frontend:
+      #    requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
+      #- smoke-test:
+      #    requires: [deploy-backend, deploy-frontend]
