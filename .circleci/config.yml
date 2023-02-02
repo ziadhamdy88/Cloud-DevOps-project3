@@ -306,11 +306,11 @@ jobs:
             sudo apt install ansible -y
       - run:
           name: Testing inventory file
-          command: cat project/.circleci/ansible/inventory.txt
+          command: cat ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Run ansible playbook and configure server
           command: |
-            cd .circleci/ansible
+            cd /project/.circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
 
