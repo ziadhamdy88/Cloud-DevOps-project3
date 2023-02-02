@@ -9,7 +9,7 @@ commands:
           when: on_fail
           command: |
             aws cloudformation delete-stack \
-            --stack-name "udapeople-backend-${CIRCLECI_WORKFLOW_ID:0:7}"
+            --stack-name udapeople-backend-${CIRCLECI_WORKFLOW_ID:0:7}
       - run:
           name: Destroy frontend
           when: on_fail
@@ -29,7 +29,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_$\{CIRCLE_WORKFLOW_ID:0:7\})
             if(($SUCCESS == Not Found))
             then
               echo "Migration failed"
@@ -37,7 +37,7 @@ commands:
             then
               cd ~/project/backend
               npm install
-              npm run migrations:revert
+              npm run migration:revert
             fi
             
 
@@ -265,7 +265,7 @@ jobs:
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               echo "Migrations dumped successfully"
-              curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
             else
               echo "Unsuccessful"
             fi
