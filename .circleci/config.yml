@@ -278,17 +278,6 @@ jobs:
   configure-infrastructure:
     docker:
       - image: cimg/base:stable
-        environment:
-          NODE_ENV: "production"
-          VERSION: "1"
-          ENVIRONMENT: "production"
-          TYPEORM_CONNECTION: $TYPEORM_CONNECTION
-          TYPEORM_HOST: $TYPEORM_HOST
-          TYPEORM_USERNAME: $TYPEORM_USERNAME
-          TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-          TYPEORM_DATABASE: $TYPEORM_DATABASE
-          TYPEORM_PORT: $TYPEORM_PORT
-          TYPEORM_ENTITIES: $TYPEORM_ENTITIES
     steps:
       - checkout
       - add_ssh_keys:
@@ -317,7 +306,7 @@ jobs:
             sudo apt install ansible -y
       - run:
           name: Testing inventory file
-          command: cat /project/.circleci/ansible/inventory.txt
+          command: cat project/.circleci/ansible/inventory.txt
       - run:
           name: Run ansible playbook and configure server
           command: |
