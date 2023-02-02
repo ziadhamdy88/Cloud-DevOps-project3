@@ -44,11 +44,24 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-build]
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
       - run:
           name: Build front-end
           command: |
@@ -61,11 +74,24 @@ jobs:
   
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
       - run:
           name: Build back-end
           command: |
@@ -78,45 +104,84 @@ jobs:
   
   test-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-build]
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
       - run:
           name: Test front-end
           command: |
             cd frontend
             npm install
             npm run test
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
+      #- save_cache:
+      #    paths: [frontend/node_modules]
+      #    key: frontend-build
   
   test-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
       - run:
           name: Test back-end
           command: |
             cd backend
             npm install
             npm run test
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
+      #- save_cache:
+      #    paths: [backend/node_modules]
+      #    key: backend-build
 
   scan-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-build]
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
       - run:
           name: Scan front-end
           command: |
@@ -127,17 +192,30 @@ jobs:
             npm audit fix --force
             npm audit --audit-level=critical
           # audit fix twice
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
+      #- save_cache:
+      #    paths: [frontend/node_modules]
+      #    key: frontend-build
 
   scan-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
           keys: [backend-build]
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
       - run:
           name: Scan back-end
           command: |
@@ -147,18 +225,24 @@ jobs:
             npm audit fix --force
             npm audit fix --force
             npm audit --audit-level=critical
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
+      #- save_cache:
+      #    paths: [backend/node_modules]
+      #    key: backend-build
   
   deploy-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: cimg/base:stable
     steps:
       - checkout
       - run:
-          name: Install tar and gzip
-          command: yum install -y tar gzip
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      #- run:
+      #    name: Install tar and gzip
+      #    command: yum install -y tar gzip
       - run:
           name: Ensure backend infrastructure exists
           command: |
@@ -243,7 +327,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
