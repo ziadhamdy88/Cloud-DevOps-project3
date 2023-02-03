@@ -247,13 +247,12 @@ jobs:
       - install-awscli
       #- restore_cache:
       #    keys: [backend-build]
-      - attach_workspace:
-          at: ~/
       - run:
           name: Run migrations
           command: |
             cd backend
-            npm install
+            npm i
+            npm run build
             npm run migrations > migrations_dump.txt
       - run:
           name: Test migrations_dump content
@@ -278,12 +277,13 @@ jobs:
       - checkout
       - install-awscli
       - install-node
-      - install-ansible
-      - attach_workspace:
-          at: ~/
+      - restore_cache:
+          keys: [frontend-build]
       - run:
-          name: Install python
+          name: Install dependencies
           command: |
+            cd frontend
+            npm i
             sudo apt -y update
             sudo apt install python3
       - run:
@@ -330,17 +330,18 @@ jobs:
             cd backend
             npm install
       - run:
+          name: Build backend
+          command: |
+            cd backend
+            npm run build
+      - run:
           name: Zip directory to artifact
           command: |
             cd backend
-            #sudo npm install -g typescript
             sudo npm run build
             tar -czf artifact.tar.gz dist/* package*
             cd ..
-            #sudo tar -C backend -czvf ~/project/artifact.tar.gz .
             cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-            
-            # Printing inventory file content
 
             echo "Contents of the inventory.txt file is -------"
             cat ~/project/.circleci/ansible/inventory.txt
@@ -350,7 +351,6 @@ jobs:
             export TYPEORM_MIGRATIONS_DIR=./migrations
             export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
             export TYPEORM_MIGRATIONS=./migrations/*.ts
-            #export ANSIBLE_HOST_KEY_CHECKING=False
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
@@ -363,8 +363,6 @@ jobs:
       - checkout
       - install-awscli
       - install-node
-      - attach_workspace:
-          at: ~/
       - run:
           name: Backend smoke test.
           command: |
@@ -386,7 +384,7 @@ jobs:
             echo ${URL}
             if curl -s ${URL} | grep "Welcome"
             then
-              exit 1
+              exit 0
             else
               exit 1
             fi

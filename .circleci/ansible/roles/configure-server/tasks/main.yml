@@ -1,16 +1,17 @@
 ---
-- name: "Add Node"
-  become: true
-  shell: |
-      curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+#- name: "Add Node"
+#  become: true
+#  shell: |
+#      curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 - name: "Install Node"
   become: true
   apt:
-      name: ["nodejs"]
-      state: latest
+      name: ["nodejs", "npm"]
+      state: present
       update_cache: yes
 
 - name: "Install PM2"
-  npm:
-      name: pm2
-      global: yes
+  command: npm install pm2 -g
+  #npm:
+  #    name: pm2
+  #    global: yes
