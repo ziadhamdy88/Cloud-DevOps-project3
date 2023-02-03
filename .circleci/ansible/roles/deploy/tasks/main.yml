@@ -1,12 +1,12 @@
 ---
 - name: Create directory
-  become: yes
+  become: true
   file:
     path: backend_app/
     state: directory
 
 - name: Extract zipped artifact into the EC2
-  become: yes
+  become: true
   unarchive:
     src: artifact.tar.gz
     dest: backend_app/
