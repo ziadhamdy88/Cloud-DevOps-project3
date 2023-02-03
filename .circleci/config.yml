@@ -215,7 +215,7 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - run:
           name: Testing inventory
-          command: cat project/.circleci/ansible/inventory.txt
+          command: cat .circleci/ansible/inventory.txt
       - destroy-environment
     
   configure-infrastructure:
@@ -270,6 +270,7 @@ jobs:
             else
               echo "Unsuccessful"
             fi
+      - destroy-environment
       - revert-migrations
 
   deploy-frontend:
