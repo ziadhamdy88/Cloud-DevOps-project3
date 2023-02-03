@@ -9,8 +9,8 @@ commands:
           command: |
             curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
             sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
+            #sudo npm install --global n
+            #sudo n 13.8.0
   
   install-awscli:
     description: Installs awscli
@@ -35,24 +35,20 @@ commands:
       
   destroy-environment:
     description: Destroys back-end and front-end cloudformation stacks given workflow id
+    parameters:
+      WorkflowID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
-          name: Destroy backend
+          name: Destroy environments
           when: on_fail
           command: |
             aws cloudformation delete-stack \
-            --stack-name udapeople-backend-${CIRCLECI_WORKFLOW_ID:0:7}
-      - run:
-          name: Destroy frontend
-          when: on_fail
-          command: |
+            --stack-name udapeople-backend-<<parameters.WorkflowID>>
+            aws s3 rm s3://udapeople-<<parameters.WorkflowID>> --recursive
             aws cloudformation delete-stack \
-            --stack-name "udapeople-frontend-${CIRCLECI_WORKFLOW_ID:0:7}"
-      - run:
-          name: Destroy s3
-          when: on_fail
-          command: |
-            aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+            --stack-name udapeople-frontend-<<parameters.WorkflowID>>
   
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -62,7 +58,7 @@ commands:
           when: on_fail
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7})
-            if(($SUCCESS == Not Found))
+            if(($SUCCESS == "Not Found"))
             then
               echo "Migration failed"
             elif(($SUCCESS == 1));
@@ -76,11 +72,9 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-awscli
-      - install-node
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -95,11 +89,9 @@ jobs:
   
   build-backend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-awscli
-      - install-node
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -114,11 +106,9 @@ jobs:
   
   test-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-awscli
-      - install-node
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -133,11 +123,9 @@ jobs:
   
   test-backend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-awscli
-      - install-node
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -152,11 +140,9 @@ jobs:
 
   scan-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-awscli
-      - install-node
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -165,8 +151,6 @@ jobs:
             cd frontend
             npm install
             npm audit fix --audit-level=critical --force
-            npm audit fix --force
-            npm audit fix --force
             npm audit --audit-level=critical
           # audit fix twice
       #- save_cache:
@@ -175,11 +159,9 @@ jobs:
 
   scan-backend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-awscli
-      - install-node
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -188,8 +170,7 @@ jobs:
             cd backend
             npm install
             npm audit fix --audit-level=critical --force
-            npm audit fix --force
-            npm audit fix --force
+            npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
       #- save_cache:
       #    paths: [backend/node_modules]
@@ -242,7 +223,6 @@ jobs:
     steps:
       - checkout
       - install-awscli
-      - install-node
       - install-ansible
       - add_ssh_keys:
           fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
@@ -250,11 +230,11 @@ jobs:
           at: ~/
       - run:
           name: Testing inventory file
-          command: cat ~/project/.circleci/ansible/inventory.txt
+          command: cat project/.circleci/ansible/inventory.txt
       - run:
           name: Run ansible playbook and configure server
           command: |
-            cd ~/project/.circleci/ansible
+            cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
 
@@ -430,8 +410,8 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
+      #- run-migrations:
+      #    requires: [configure-infrastructure]
       #- deploy-frontend:
       #    requires: [run-migrations]
       - deploy-backend:
