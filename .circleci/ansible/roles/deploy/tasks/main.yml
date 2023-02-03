@@ -8,8 +8,8 @@
 - name: Extract zipped artifact into the EC2
   become: yes
   unarchive:
-    src: ~/.circleci/ansible/roles/deploy/files/artifact.tar.gz
-    dest: home/ubuntu/backend_app
+    src: artifact.tar.gz
+    dest: backend_app/
 
 - name: Install dependencies
   shell: |
