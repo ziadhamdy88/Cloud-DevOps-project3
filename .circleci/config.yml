@@ -64,6 +64,8 @@ commands:
               npm install
               npm run migration:revert
             fi
+          # curl https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_159f88a -XDELETE
+
             
 
 jobs:
