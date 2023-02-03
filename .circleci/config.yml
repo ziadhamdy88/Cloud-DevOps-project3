@@ -247,14 +247,14 @@ jobs:
       - install-awscli
       #- restore_cache:
       #    keys: [backend-build]
-      #- attach_workspace:
-      #    at: ~/
+      - attach_workspace:
+          at: ~/
       - run:
           name: Run migrations
           command: |
             cd backend
             npm install
-            #npm run migrations > ~/project/backend/migrations_dump.txt
+            #npm run migrations > backend/migrations_dump.txt
             npm run migrations > migrations_dump.txt
       - run:
           name: Test migrations_dump content
