@@ -241,13 +241,12 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - install-awscli
-      - install-node
-      - restore_cache:
-          keys: [backend-build]
+      #- restore_cache:
+      #    keys: [backend-build]
       #- attach_workspace:
       #    at: ~/
       - run:
@@ -412,8 +411,8 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      #- run-migrations:
-      #    requires: [configure-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
       #- deploy-frontend:
       #    requires: [run-migrations]
       #- deploy-backend:
