@@ -58,10 +58,7 @@ commands:
           when: on_fail
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7})
-            if(($SUCCESS == "Not Found"))
-            then
-              echo "Migration failed"
-            elif(($SUCCESS == 1));
+            if(($SUCCESS == 1));
             then
               cd ~/project/backend
               npm install
@@ -339,7 +336,7 @@ jobs:
             sudo npm run build
             tar -czf artifact.tar.gz dist/* package*
             cd ..
-            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            cp backend/artifact.tar.gz project/.circleci/ansible/roles/deploy/files
 
             echo "Contents of the inventory.txt file is -------"
             cat ~/project/.circleci/ansible/inventory.txt
@@ -351,7 +348,7 @@ jobs:
             export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - destroy-environment
+      #- destroy-environment
       - revert-migrations
   
   smoke-test:
