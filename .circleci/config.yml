@@ -62,7 +62,7 @@ commands:
             then
               cd ~/project/backend
               npm install --legacy-peer-deps
-              npm run migration:revert
+              npm run migrations:revert
             fi
           # curl https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_159f88a -XDELETE
 
