@@ -1,6 +1,38 @@
 version: 2.1
 
 commands:
+  install-node:
+    description: Installs NPM and Nodejs
+    steps:
+      - run:
+          name: Install npm and node js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
+  
+  install-awscli:
+    description: Installs awscli
+    steps:
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+
+  install-ansible:
+    descripion: Installs Ansible
+    steps:
+      - run:
+          name: Install Ansible
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common -y
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible -y
+      
   destroy-environment:
     description: Destroys back-end and front-end cloudformation stacks given workflow id
     steps:
@@ -33,11 +65,11 @@ commands:
             if(($SUCCESS == Not Found))
             then
               echo "Migration failed"
-            elif(($SUCCESS == 1))
+            elif(($SUCCESS == 1));
             then
               cd ~/project/backend
               npm install
-              npm run migrations:revert
+              npm run migration:revert
             fi
             
 
@@ -47,21 +79,10 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
       - restore_cache:
           keys: [frontend-build]
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
       - run:
           name: Build front-end
           command: |
@@ -77,21 +98,10 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
       - run:
           name: Build back-end
           command: |
@@ -107,21 +117,10 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
       - restore_cache:
           keys: [frontend-build]
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
       - run:
           name: Test front-end
           command: |
@@ -137,21 +136,10 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
       - run:
           name: Test back-end
           command: |
@@ -167,21 +155,10 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
       - restore_cache:
           keys: [frontend-build]
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
       - run:
           name: Scan front-end
           command: |
@@ -201,21 +178,10 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
       - run:
           name: Scan back-end
           command: |
@@ -234,12 +200,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
+      - install-awscli
       #- run:
       #    name: Install tar and gzip
       #    command: yum install -y tar gzip
@@ -280,30 +241,13 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
+      - install-ansible
       - add_ssh_keys:
           fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
-      - run:
-          name: Install Ansible
-          command: |
-            sudo apt update
-            sudo apt install software-properties-common -y
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible -y
       - run:
           name: Testing inventory file
           command: cat ~/project/.circleci/ansible/inventory.txt
@@ -319,23 +263,12 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
       - restore_cache:
           keys: [backend-build]
       #- attach_workspace:
       #    at: ~/
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
       - run:
           name: Run migrations
           command: |
@@ -363,28 +296,11 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
+      - install-ansible
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
-      - run:
-          name: Install Ansible
-          command: |
-            sudo apt update
-            sudo apt install software-properties-common -y
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible -y
       - run:
           name: Install python
           command: |
@@ -419,32 +335,15 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - install-awscli
+      - install-node
+      - install-ansible
       - add_ssh_keys:
           fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
       - attach_workspace:
           at: ~/
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
-      - run:
-          name: Install Ansible
-          command: |
-            sudo apt update
-            sudo apt install software-properties-common -y
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible -y
       - run:
           name: Install dependencies
           command: |
@@ -482,19 +381,8 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - run:
-          name: Install AWS CLI
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
-          name: Install npm and node js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            sudo apt install -y nodejs
-            sudo npm install --global n
-            sudo n 13.8.0
+      - install-awscli
+      - install-node
       - attach_workspace:
           at: ~/
       - run:
