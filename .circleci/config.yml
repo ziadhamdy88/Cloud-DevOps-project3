@@ -338,7 +338,7 @@ jobs:
             sudo npm run build
             tar -czf artifact.tar.gz dist/* package*
             cd ..
-            cp backend/artifact.tar.gz project/.circleci/ansible/roles/deploy/files
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
 
             echo "Contents of the inventory.txt file is -------"
             cat ~/project/.circleci/ansible/inventory.txt
