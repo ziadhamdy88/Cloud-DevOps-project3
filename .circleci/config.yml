@@ -215,7 +215,7 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - run:
           name: Testing inventory
-          command: cat ~/project/.circleci/ansible/inventory.txt
+          command: cat project/.circleci/ansible/inventory.txt
       - destroy-environment
     
   configure-infrastructure:
@@ -231,7 +231,7 @@ jobs:
           at: ~/
       - run:
           name: Testing inventory file
-          command: cat project/.circleci/ansible/inventory.txt
+          command: cat .circleci/ansible/inventory.txt
       - run:
           name: Run ansible playbook and configure server
           command: |
