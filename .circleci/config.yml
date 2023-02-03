@@ -23,7 +23,7 @@ commands:
             sudo ./aws/install
 
   install-ansible:
-    descripion: Installs Ansible
+    description: Installs Ansible
     steps:
       - run:
           name: Install Ansible
