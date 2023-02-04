@@ -57,7 +57,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_1bdbe4d)
+            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7}
             if(($SUCCESS == 1));
             then
               cd ~/project/backend
@@ -337,12 +337,10 @@ jobs:
             cd backend
             sudo npm run build
             cd ..
-            #tar -C backend -czvf artifact.tar.gz dist/* package*
-            tar -C backend -czvf artifact.tar.gz package*
+            # tar -C backend -czvf artifact.tar.gz dist/* package*
+            # tar -C backend -czvf artifact.tar.gz package*
+            tar -C backend -czvf artifact.tar.gz .
             cp artifact.tar.gz .circleci/ansible/roles/deploy/files
-
-            echo "Contents of the inventory.txt file is -------"
-            cat ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Deploy backend
           command: |

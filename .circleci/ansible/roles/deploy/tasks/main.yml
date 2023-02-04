@@ -5,11 +5,14 @@
     path: backend_app/
     state: directory
 
-- name: Extract zipped artifact into the EC2
+- name: Extract zipped artifact into the EC2 instance
   become: true
-  unarchive:
-    src: artifact.tar.gz
-    dest: backend_app/
+  shell: |
+    cd backend_app/
+    tar xzf ../artifact.tar.gz
+  #unarchive:
+  #  src: artifact.tar.gz
+  #  dest: backend_app/
 
 - name: Install dependencies
   shell: |
@@ -19,8 +22,8 @@
 - name: Start the app
   shell: |
     cd backend_app/dist
-    #pm2 stop default
     pm2 start main.js
+    
   environment:
     ENVIRONMENT: "production"
     VERSION: "1"
