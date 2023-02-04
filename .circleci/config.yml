@@ -344,17 +344,11 @@ jobs:
             cd backend
             npm run build
             cd ..
-            # tar -C backend -czvf artifact.tar.gz dist/* package*
-            # tar -C backend -czvf artifact.tar.gz package*
             tar -C backend -czvf artifact.tar.gz .
             cp artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
-      - run:
-          name: Testing content of deploy/files
-          command: ls ~/project/.circleci/ansible/roles/deploy/files
-
       - run:
           name: Deploy backend
           command: |

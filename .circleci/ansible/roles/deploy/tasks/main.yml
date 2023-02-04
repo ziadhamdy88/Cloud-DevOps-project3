@@ -5,6 +5,11 @@
     path: backend_app/
     state: directory
 
+- name: Install dependencies
+  shell: |
+    cd backend_app
+    npm install --legacy-peer-deps
+
 - name: Extract zipped artifact into the EC2 instance
   become: true
   shell: |
@@ -12,11 +17,6 @@
   #unarchive:
   #  src: artifact.tar.gz
   #  dest: backend_app/
-
-- name: Install dependencies
-  shell: |
-    cd backend_app
-    npm install --legacy-peer-deps
 
 - name: Start the app
   shell: |
