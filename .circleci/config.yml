@@ -214,7 +214,6 @@ jobs:
             --filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text)
             
-            echo $BACKEND_IP >> ~/project/.circleci/ansible/inventory.txt
             echo $BACKEND_IP >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
@@ -349,6 +348,9 @@ jobs:
             # tar -C backend -czvf artifact.tar.gz package*
             tar -C backend -czvf artifact.tar.gz .
             cp artifact.tar.gz .circleci/ansible/roles/deploy/files
+      - run:
+          name: Testing inventory
+          command: cat .circleci/ansible/inventory.txt
       - run:
           name: Deploy backend
           command: |
