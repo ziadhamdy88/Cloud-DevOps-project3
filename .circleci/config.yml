@@ -208,13 +208,14 @@ jobs:
             #--query 'Reservations[*].Instances[*].PublicIpAddress' \
             #--filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             #--output text >> .circleci/ansible/inventory.txt
-            backend_ip = $(aws ec2 describe-instances \
+            
+            BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text)
             
-            echo $backend_ip >> project/.circleci/ansible/inventory.txt
-            echo $backend_ip >> .circleci/ansible/inventory.txt
+            echo $BACKEND_IP >> project/.circleci/ansible/inventory.txt
+            echo $BACKEND_IP >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
