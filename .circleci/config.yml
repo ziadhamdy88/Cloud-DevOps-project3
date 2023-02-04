@@ -352,6 +352,10 @@ jobs:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
       - run:
+          name: Testing content of deploy/files
+          command: ls ~/project/.circleci/ansible/roles/deploy/files
+
+      - run:
           name: Deploy backend
           command: |
             export TYPEORM_MIGRATIONS_DIR=./migrations
