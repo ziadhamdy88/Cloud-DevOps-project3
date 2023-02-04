@@ -4,12 +4,6 @@
   file:
     path: backend_app/
     state: directory
-    
-- name: Install dependencies
-  become: yes
-  npm:
-    path: /backend
-    state: latest
 
 - name: Extract zipped artifact into the EC2 instance
   become: true
