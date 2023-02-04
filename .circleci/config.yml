@@ -57,7 +57,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_${CIRCLE_WORKFLOW_ID:0:7}
+            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_7045ab0
             if(($SUCCESS == 1));
             then
               cd ~/project/backend
@@ -335,7 +335,7 @@ jobs:
           name: Zip directory to artifact
           command: |
             cd backend
-            sudo npm run build
+            npm run build
             cd ..
             # tar -C backend -czvf artifact.tar.gz dist/* package*
             # tar -C backend -czvf artifact.tar.gz package*
