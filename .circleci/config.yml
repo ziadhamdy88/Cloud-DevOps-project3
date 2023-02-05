@@ -326,8 +326,6 @@ jobs:
           fingerprints: ["2e:44:cb:ab:f0:cb:58:1a:8c:a4:6a:f0:8d:a1:6c:9d"]
       - attach_workspace:
           at: ~/
-      - restore_cache:
-          keys: [backend-build]
       - run:
           name: Install dependencies
           command: |
@@ -346,12 +344,13 @@ jobs:
             cd backend
             npm run build
             tar -czvf artifact.tar.gz dist/* package*
-            cp -v artifact.tar.gz ~/.circleci/ansible/roles/deploy/files
+            cd ..
+            cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files
 
       - run:
           name: Testing folder content
           command: |
-            for file in .circleci/ansible/roles/deploy/files/*; do
+            for file in .circleci/*; do
               echo "${file##*/}"
             done
             echo "Files in backend"
