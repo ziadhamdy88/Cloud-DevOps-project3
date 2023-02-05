@@ -2,26 +2,26 @@
 - name: Create directory
   become: true
   file:
-    path: backend_app/
+    path: home/ubuntu/backend_app
     state: directory
 
 
 - name: Extract zipped artifact into the EC2 instance
   become: true
-  shell: |
-    tar -xzf artifact.tar.gz -C backend_app/
-  #unarchive:
-  #  src: artifact.tar.gz
-  #  dest: backend_app/
+  #shell: |
+  #  tar -xzf artifact.tar.gz -C backend_app/
+  unarchive:
+    src: artifact.tar.gz
+    dest: /home/ubuntu/backend_app
   
 - name: Install dependencies
   shell: |
-    cd backend_app
+    cd /home/ubuntu/backend_app
     npm install --legacy-peer-deps
 
 - name: Start the app
   shell: |
-    cd backend_app/dist
+    cd /home/ubuntu/backend_app/dist
     pm2 start main.js
     
   environment:
