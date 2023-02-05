@@ -344,16 +344,16 @@ jobs:
           command: |
             cd backend
             npm run build
+      #tar -C backend -czvf artifact.tar.gz .
+      #cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Zip directory to artifact
           command: |
             cd backend
             npm run build
-            tar -czf artifact.tar.gz dist/* package*
+            tar -czvf artifact.tar.gz dist/* package*
             cd ..
-            #tar -C backend -czvf artifact.tar.gz .
             cp backend/artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
-            #cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Testing folder content
           command: |
