@@ -346,7 +346,7 @@ jobs:
             cd backend
             npm run build
             tar -czvf artifact.tar.gz dist/* package*
-            cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files
+            cp -v artifact.tar.gz ~/.circleci/ansible/roles/deploy/files
 
       - run:
           name: Testing folder content
