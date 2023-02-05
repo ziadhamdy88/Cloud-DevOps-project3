@@ -38,7 +38,7 @@
     TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
   register: execute_code
 
-- name: Configure pm2 to start as service
-  become: true
-  shell: |
-      env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
+#- name: Configure pm2 to start as service
+#  become: true
+#  shell: |
+#      env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
