@@ -8,11 +8,11 @@
 
 - name: Extract zipped artifact into the EC2 instance
   become: true
-  #shell: |
-  #  tar -xzf artifact.tar.gz -C backend_app/
-  unarchive:
-    src: artifact.tar.gz
-    dest: ~/backend_app
+  shell: |
+    tar -xzf artifact.tar.gz -C backend_app/
+  #unarchive:
+  #  src: artifact.tar.gz
+  #  dest: ~/backend_app
   
 - name: Install dependencies
   shell: |
