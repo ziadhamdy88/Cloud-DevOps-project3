@@ -354,6 +354,10 @@ jobs:
             for file in .circleci/ansible/roles/deploy/files/*; do
               echo "${file##*/}"
             done
+            echo "Files in backend"
+            for file in backend/*; do
+              echo "${file##*/}"
+            done
       - run:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
