@@ -236,6 +236,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: Testing folder content
+          command: |
+            echo $(basename /.circleci/)
+      - run:
           name: Testing inventory file
           command: cat .circleci/ansible/inventory.txt
       - run:
@@ -347,6 +351,11 @@ jobs:
             cd ..
             #tar -C backend -czvf artifact.tar.gz .
             cp backend/artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
+            #cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+      - run:
+          name: Testing folder content
+          command: |
+            echo $(basename .circleci/ansible/roles/deploy/files)
       - run:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
