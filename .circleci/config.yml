@@ -71,10 +71,9 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-node
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -89,10 +88,9 @@ jobs:
   
   build-backend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-node
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -107,10 +105,9 @@ jobs:
   
   test-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-node
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -125,10 +122,9 @@ jobs:
   
   test-backend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-node
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -143,10 +139,9 @@ jobs:
 
   scan-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-node
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -164,10 +159,9 @@ jobs:
 
   scan-backend:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install-node
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -253,11 +247,10 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - install-awscli
-      - install-node
       - run:
           name: Run migrations
           command: |
