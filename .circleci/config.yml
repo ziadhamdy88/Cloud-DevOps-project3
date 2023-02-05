@@ -238,7 +238,7 @@ jobs:
       - run:
           name: Testing folder content
           command: |
-            echo $(basename /.circleci/)
+            echo $(basename .circleci/)
       - run:
           name: Testing inventory file
           command: cat .circleci/ansible/inventory.txt
@@ -355,7 +355,7 @@ jobs:
       - run:
           name: Testing folder content
           command: |
-            echo $(basename .circleci/ansible/roles/deploy/files)
+            basename .circleci/ansible/roles/deploy/files
       - run:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
