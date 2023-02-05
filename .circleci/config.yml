@@ -236,12 +236,6 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Testing folder content
-          command: |
-            for file in .circleci/*; do
-              echo "${file##*/}"
-            done
-      - run:
           name: Testing inventory file
           command: cat .circleci/ansible/inventory.txt
       - run:
@@ -353,7 +347,7 @@ jobs:
             npm run build
             tar -czvf artifact.tar.gz dist/* package*
             cd ..
-            cp backend/artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Testing folder content
           command: |
