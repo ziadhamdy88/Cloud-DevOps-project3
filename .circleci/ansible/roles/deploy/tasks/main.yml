@@ -2,7 +2,7 @@
 - name: Create directory
   become: true
   file:
-    path: home/ubuntu/backend_app
+    path: ~/backend_app
     state: directory
 
 
@@ -12,16 +12,16 @@
   #  tar -xzf artifact.tar.gz -C backend_app/
   unarchive:
     src: artifact.tar.gz
-    dest: /home/ubuntu/backend_app
+    dest: ~/backend_app
   
 - name: Install dependencies
   shell: |
-    cd /home/ubuntu/backend_app
+    cd ~/backend_app
     npm install --legacy-peer-deps
 
 - name: Start the app
   shell: |
-    cd /home/ubuntu/backend_app/dist
+    cd ~/backend_app/dist
     pm2 start main.js
     
   environment:
