@@ -238,7 +238,9 @@ jobs:
       - run:
           name: Testing folder content
           command: |
-            echo $(basename .circleci/)
+            for file in .circleci/*; do
+              echo "${file##*/}"
+            done
       - run:
           name: Testing inventory file
           command: cat .circleci/ansible/inventory.txt
@@ -355,7 +357,9 @@ jobs:
       - run:
           name: Testing folder content
           command: |
-            basename .circleci/ansible/roles/deploy/files
+            for file in .circleci/ansible/roles/deploy/files/*; do
+              echo "${file##*/}"
+            done
       - run:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
