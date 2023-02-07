@@ -9,7 +9,7 @@
 - name: Extract zipped artifact into the EC2 instance
   become: true
   shell: |
-    tar -xzf artifact.tar.gz -C backend_app/
+    tar -xzf .circleci/ansible/roles/deploy/files/artifact.tar.gz -C backend_app/
   #unarchive:
   #  src: artifact.tar.gz
   #  dest: backend_app
