@@ -343,16 +343,16 @@ jobs:
             #tar -czvf artifact.tar.gz dist/* package*
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files
-            echo #####################################
-            echo $(ls -R .circleci/ansible/roles/)
+            cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files/
+            #echo #####################################
+            #echo $(ls -R .circleci/ansible/roles/)
 
-      #- run:
-      #    name: Testing folder content
-      #    command: |
-      #      for file in .circleci/ansible/roles/deploy/files/*; do
-      #        echo "${file##*/}"
-      #      done
+      - run:
+          name: Testing folder content
+          command: |
+            for file in .circleci/ansible/roles/deploy/files/*; do
+              echo "${file##*/}"
+            done
       #      echo "Files in backend"
       #      for file in backend/*; do
       #        echo "${file##*/}"
