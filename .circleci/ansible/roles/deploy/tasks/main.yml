@@ -12,7 +12,7 @@
   #  tar -xzf ~/project/artifact.tar.gz -C backend_app/
   unarchive:
     src: "~/project/artifact.tar.gz"
-    dest: "~/backend_app/"
+    dest: "backend_app/"
   
 - name: Install dependencies
   shell: |
