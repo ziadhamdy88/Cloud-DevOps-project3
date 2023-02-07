@@ -36,7 +36,7 @@
     
     - name: Install tar and gzip
       become: true
-      shell: yum install -y tar gzip
+      shell: apt install -y tar gzip
 
     - name: install zip and unzip
       become: true
