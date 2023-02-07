@@ -348,7 +348,7 @@ jobs:
       - run:
           name: Testing folder content
           command: |
-            for file in ~/*; do
+            for file in ~/project/*; do
               echo "${file##*/}"
             done
       #      echo "Files in backend"
