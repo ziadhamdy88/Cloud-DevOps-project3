@@ -10,7 +10,7 @@
   become: true
   #shell: |
   #  tar -xzf artifact.tar.gz -C backend_app/
-  ansible.builtin.unarchive:
+  unarchive:
     src: artifact.tar.gz
     dest: backend_app
   
