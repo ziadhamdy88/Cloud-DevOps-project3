@@ -33,7 +33,11 @@
       become: true
       raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
       changed_when: false
-  
+    
+    - name: Install tar and gzip
+      become: true
+      shell: yum install -y tar gzip
+
     - name: install zip and unzip
       become: true
       become_method: sudo
