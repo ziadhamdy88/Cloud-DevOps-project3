@@ -9,7 +9,7 @@
 - name: Extract zipped artifact into the EC2 instance
   become: true
   shell: |
-    tar -xvf ~/project/artifact.tar.gz -C backend_app/
+    tar -xvzf ~/project/artifact.tar.gz -C backend_app/
   #unarchive:
   #  src: "~/project/artifact.tar.gz"
   #  dest: "backend_app/"
