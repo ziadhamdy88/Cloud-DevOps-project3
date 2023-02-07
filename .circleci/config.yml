@@ -355,7 +355,7 @@ jobs:
       - run:
           name: Testing folder content
           command: |
-            for file in .circleci/ansible/roles/deploy/files/files; do
+            for file in .circleci/ansible/roles/deploy/*; do
               echo "${file##*/}"
             done
             echo "Files in backend"
