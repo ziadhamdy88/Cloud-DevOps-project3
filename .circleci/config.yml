@@ -341,14 +341,14 @@ jobs:
             cd backend
             npm run build
             tar -czvf artifact.tar.gz dist/* package*
-            cp artifact.tar.gz ../
+            cp -v artifact.tar.gz ../
             #cd ..
             #tar -C backend -czvf artifact.tar.gz .
             #cp -v backend/artifact.tar.gz .circleci/ansible/roles/deploy/files/
       - run:
           name: Testing folder content
           command: |
-            for file in .circleci/ansible/roles/deploy/files/*; do
+            for file in ~/*; do
               echo "${file##*/}"
             done
       #      echo "Files in backend"
