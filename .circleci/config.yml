@@ -335,34 +335,29 @@ jobs:
           command: |
             cd backend
             npm install
-      - run:
-          name: Build backend
-          command: |
-            cd backend
-            npm run build
-      #tar -C backend -czvf artifact.tar.gz .
       #cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Zip directory to artifact
           command: |
             cd backend
             npm run build
-            tar -czvf artifact.tar.gz dist/* package*
+            #tar -czvf artifact.tar.gz dist/* package*
             cd ..
-            cp -v backend/artifact.tar.gz .circleci/ansible/roles/deploy/
+            tar -C backend -czvf artifact.tar.gz .
+            #cp -v backend/artifact.tar.gz .circleci/ansible/roles/deploy/
             echo #####################################
             echo $(ls -R .circleci/ansible/roles/)
 
-      - run:
-          name: Testing folder content
-          command: |
-            for file in .circleci/ansible/roles/deploy/files/*; do
-              echo "${file##*/}"
-            done
-            echo "Files in backend"
-            for file in backend/*; do
-              echo "${file##*/}"
-            done
+      #- run:
+      #    name: Testing folder content
+      #    command: |
+      #      for file in .circleci/ansible/roles/deploy/files/*; do
+      #        echo "${file##*/}"
+      #      done
+      #      echo "Files in backend"
+      #      for file in backend/*; do
+      #        echo "${file##*/}"
+      #      done
       - run:
           name: Testing inventory
           command: cat ~/project/.circleci/ansible/inventory.txt
