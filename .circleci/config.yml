@@ -71,7 +71,6 @@ commands:
           # curl https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_159f88a -XDELETE
 
             
-
 jobs:
   build-frontend:
     docker:
@@ -344,7 +343,7 @@ jobs:
             #tar -czvf artifact.tar.gz dist/* package*
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            #cp -v backend/artifact.tar.gz .circleci/ansible/roles/deploy/
+            cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files
             echo #####################################
             echo $(ls -R .circleci/ansible/roles/)
 
