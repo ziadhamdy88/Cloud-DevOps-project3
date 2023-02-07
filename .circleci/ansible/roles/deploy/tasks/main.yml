@@ -8,20 +8,20 @@
 
 - name: Extract zipped artifact into the EC2 instance
   become: true
-  #shell: |
-  #  tar -xzf artifact.tar.gz -C backend_app/
-  unarchive:
-    src: "~/project/artifact.tar.gz"
-    dest: "~/backend_app/"
+  shell: |
+    tar -xzf ~/project/artifact.tar.gz -C ~/backend_app/
+  #unarchive:
+  #  src: "~/project/artifact.tar.gz"
+  #  dest: "~/backend_app/"
   
 - name: Install dependencies
   shell: |
-    cd backend_app
+    cd ~/backend_app
     npm install --legacy-peer-deps
 
 - name: Start the app
   shell: |
-    cd backend_app/dist
+    cd ~/backend_app/dist
     pm2 start main.js
     
   environment:
