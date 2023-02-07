@@ -344,7 +344,7 @@ jobs:
             #cp -v artifact.tar.gz ../
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            cp -v backend/artifact.tar.gz .circleci/ansible/roles/deploy/files/
+            cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files/
       - run:
           name: Testing folder content
           command: |
