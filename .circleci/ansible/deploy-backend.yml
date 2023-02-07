@@ -34,6 +34,18 @@
       raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
       changed_when: false
 
+    - name: Install tar and gzip
+      become: true
+      shell: apt install -y tar gzip gtar
+
+    - name: install zip and unzip
+      become: true
+      become_method: sudo
+      apt: name={{ item }} state=present
+      with_items:
+      - zip
+      - unzip
+    
     - setup:
   
   roles:
