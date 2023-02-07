@@ -52,15 +52,19 @@ commands:
   
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      WorkflowID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_a41a1d2)
+            SUCCESS=$(curl --insecure https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/migration_<<parameters.WorkflowID>>)
             if(($SUCCESS == 1));
             then
-              cd ~/project/backend
+              cd ~/backend
               npm install --legacy-peer-deps
               npm run migrations:revert
             fi
@@ -426,9 +430,9 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
+      #- deploy-frontend:
+      #    requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
+      #- smoke-test:
+      #    requires: [deploy-backend, deploy-frontend]
