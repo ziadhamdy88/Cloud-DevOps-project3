@@ -5,6 +5,17 @@
     path: backend_app
     state: directory
 
+  - name: Install tar and gzip
+    become: true
+    shell: apt install -y tar gzip gtar
+
+  - name: install zip and unzip
+    become: true
+    become_method: sudo
+    apt: name={{ item }} state=present
+    with_items:
+      - zip
+      - unzip
 
 - name: Extract zipped artifact into the EC2 instance
   become: true
