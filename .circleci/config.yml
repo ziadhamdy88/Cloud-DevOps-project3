@@ -344,9 +344,6 @@ jobs:
             cd ..
             tar -C backend -czvf artifact.tar.gz .
             cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files/
-            #echo #####################################
-            #echo $(ls -R .circleci/ansible/roles/)
-
       - run:
           name: Testing folder content
           command: |
