@@ -4,9 +4,13 @@
   file:
     path: ~/backend_app
     state: directory
-  register: command_result
-  failed_when: "'FAILED' in command_result.stderr"
 
+- name: List files and folder in home directory
+  shell: 'ls -l'
+  register: command_output
+- debug:
+    var: command_output.stdout_lines
+    
 - name: Install tar and gzip
   become: true
   shell: apt install -y tar gzip
