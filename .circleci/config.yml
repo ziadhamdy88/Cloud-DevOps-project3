@@ -424,6 +424,7 @@ jobs:
             
             echo OldWorkflowID: "${OldWorkflowID}"
             echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+            curl https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/old_workflow_id -d "${OldWorlflowID}"
 
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
@@ -444,12 +445,7 @@ jobs:
       - run:
           name: Get old stack workflow id
           command: |
-            export OldWorkflowID=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            --no-paginate --output text)
-            
-            echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+            OldWorkflowID=$(curl https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/old_workflow_id)
             
             # Fetch the stack names          
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
@@ -458,7 +454,7 @@ jobs:
       - run:
           name: Remove old stacks and files
           command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
