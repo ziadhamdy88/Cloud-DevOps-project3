@@ -340,7 +340,6 @@ jobs:
           name: Zip directory to artifact
           command: |
             cd backend
-            npm i
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
