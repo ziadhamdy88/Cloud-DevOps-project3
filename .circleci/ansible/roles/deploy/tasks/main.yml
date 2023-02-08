@@ -4,11 +4,9 @@
   file:
     path: ~/backend_app
     state: directory
-- name: Create directory
-  shell: mkdir ~/backend_app
-  
+
 - name: List files and folder in home directory
-  shell: 'ls -l'
+  shell: 'ls -l ~/'
   register: command_output
 - debug:
     var: command_output.stdout_lines
