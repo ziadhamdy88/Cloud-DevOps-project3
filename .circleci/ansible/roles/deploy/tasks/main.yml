@@ -4,6 +4,8 @@
   file:
     path: ~/backend_app
     state: directory
+  register: command_result
+  failed_when: "'FAILED' in command_result.stderr"
 
 - name: Install tar and gzip
   become: true
@@ -24,16 +26,23 @@
   unarchive:
     src: "~/project/artifact.tar.gz"
     dest: "~/backend_app/"
+  register: command_result
+  failed_when: "'FAILED' in command_result.stderr"
   
 - name: Install dependencies
   shell: |
     cd ~/backend_app
     npm install --legacy-peer-deps
+  register: command_result
+  failed_when: "'FAILED' in command_result.stderr"
 
 - name: Start the app
   shell: |
     cd ~/backend_app/dist
+    pm2 stop default
     pm2 start main.js
+  register: command_result
+  failed_when: "'FAILED' in command_result.stderr"
 
 #- name: Configure pm2 to start as service
 #  become: true
