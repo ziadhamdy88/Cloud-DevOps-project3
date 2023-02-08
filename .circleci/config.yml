@@ -423,13 +423,13 @@ jobs:
             --no-paginate --output text)
             
             echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+            echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
             curl https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/old_workflow_id -d "${OldWorkflowID}"
 
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
-            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
 
       - destroy-environment
@@ -446,7 +446,9 @@ jobs:
           name: Get old stack workflow id
           command: |
             OldWorkflowID=$(curl https://kvdb.io/XeGTRRXGiP8WWn3BH6kdjm/old_workflow_id)
-            
+            echo OldWorkflowID: "${OldWorkflowID}"
+            echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
+
             # Fetch the stack names          
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
