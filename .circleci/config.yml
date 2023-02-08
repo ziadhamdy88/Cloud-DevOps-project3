@@ -7,7 +7,7 @@ commands:
       - run:
           name: Install npm and node js
           command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
             sudo apt install -y nodejs
             #sudo npm install --global n
             #sudo n 13.8.0
@@ -293,6 +293,7 @@ jobs:
             npm i
             sudo apt -y update
             sudo apt install python3
+            
       - run:
           name: Get backend URL
           command: |
@@ -472,7 +473,7 @@ workflows:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]
+      #- deploy-backend:
+      #    requires: [run-migrations]
       #- smoke-test:
       #    requires: [deploy-backend, deploy-frontend]
