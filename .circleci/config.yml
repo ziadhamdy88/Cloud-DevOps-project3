@@ -427,8 +427,10 @@ jobs:
 
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
             --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"\
-            --stack-name InitialStack
+            --tags project=udapeople
+            
       - destroy-environment
       - revert-migrations
       # Here's where you will add some code to rollback on failure  
