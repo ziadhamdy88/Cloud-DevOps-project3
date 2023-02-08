@@ -55,7 +55,7 @@ commands:
     parameters:
       WorkflowID:
         type: string
-        default: 31e9c3b #${CIRCLE_WORKFLOW_ID:0:7}
+        default: ${CIRCLE_WORKFLOW_ID:0:7} #${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
@@ -335,13 +335,13 @@ jobs:
             cd backend
             npm install
       #cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+      #tar -czvf artifact.tar.gz dist/* package*
       - run:
           name: Zip directory to artifact
           command: |
             cd backend
+            npm i
             npm run build
-            #tar -czvf artifact.tar.gz dist/* package*
-            #cp -v artifact.tar.gz ../
             cd ..
             tar -C backend -czvf artifact.tar.gz .
             cp -v artifact.tar.gz .circleci/ansible/roles/deploy/files/
