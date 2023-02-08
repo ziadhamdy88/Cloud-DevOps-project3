@@ -55,7 +55,7 @@ commands:
     parameters:
       WorkflowID:
         type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7} #${CIRCLE_WORKFLOW_ID:0:7}
+        default: b0cb7d7 #${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
@@ -370,7 +370,7 @@ jobs:
             export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
-      #- destroy-environment
+      - destroy-environment
       - revert-migrations
   
   smoke-test:
