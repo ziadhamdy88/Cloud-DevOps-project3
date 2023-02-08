@@ -4,13 +4,15 @@
   file:
     path: ~/backend_app
     state: directory
-
+- name: Create directory
+  shell: mkdir ~/backend_app
+  
 - name: List files and folder in home directory
   shell: 'ls -l'
   register: command_output
 - debug:
     var: command_output.stdout_lines
-    
+
 - name: Install tar and gzip
   become: true
   shell: apt install -y tar gzip
@@ -30,23 +32,17 @@
   unarchive:
     src: "~/project/artifact.tar.gz"
     dest: "~/backend_app/"
-  register: command_result
-  failed_when: "'FAILED' in command_result.stderr"
   
 - name: Install dependencies
   shell: |
     cd ~/backend_app
     npm install --legacy-peer-deps
-  register: command_result
-  failed_when: "'FAILED' in command_result.stderr"
 
 - name: Start the app
   shell: |
     cd ~/backend_app/dist
     pm2 stop default
     pm2 start main.js
-  register: command_result
-  failed_when: "'FAILED' in command_result.stderr"
 
 #- name: Configure pm2 to start as service
 #  become: true
