@@ -55,7 +55,7 @@ commands:
     parameters:
       WorkflowID:
         type: string
-        default: b0cb7d7 #${CIRCLE_WORKFLOW_ID:0:7}
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
