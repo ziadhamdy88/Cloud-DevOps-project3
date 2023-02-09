@@ -1,0 +1,5 @@
+URL01: https://github.com/ziadhamdy88/Cloud-DevOps-project3
+URL02: http://udapeople-8ac2b6c.s3-website-us-east-1.amazonaws.com
+URL03: d1awylgx7ksd4u.cloudfront.net
+URL04: http://ec2-54-172-85-11.compute-1.amazonaws.com:3030/api/status
+URL05: http://ec2-34-205-90-251.compute-1.amazonaws.com:9090/targets
