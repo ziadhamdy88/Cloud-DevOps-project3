@@ -30,42 +30,7 @@
       changed_when: false
     
     - setup:
-    
-    #- name: "Upgrade packages"
-    #  become: true
-    #  apt:
-    #    name: "*"
-    #    state: latest
-    
-    #- name: Install nodejs and npm
-    #  become: true
-    #  apt:
-    #    name: ["nodejs", "npm"]
-    #    state: latest
-    #    update_cache: yes
-    
-    #- name: Install pm2
-    #  become: true
-    #  npm:
-    #    name: pm2
-    #    global: yes
-    #    production: yes
-    #    state: present
-      # Your code here
-
-  # Get the environment variables from CircleCI and add to the EC2 instance
-  #environment:
-  #  - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
-  #  - TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
-  #  - TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
-  #  - TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT')}}"
-  #  - TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
-  #  - TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
-  #  - TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
-  #  - TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
-  #  - TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
-    # Add more env vars here
 
   roles:
     - configure-server
-    # Your code here
+    - configure-prometheus-node-exporter
