@@ -100,8 +100,8 @@ jobs:
           command: |
             cd backend
             npm install
-            npm install typescript@latest -D
-            npm install @types/babel__traverse@7.0.6
+            #npm install typescript@latest -D
+            #npm install @types/babel__traverse@7.0.6
             npm run build
       - save_cache:
           paths: [backend/node_modules]
